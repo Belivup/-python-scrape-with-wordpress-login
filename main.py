@@ -101,7 +101,9 @@ def main():
         urls = get_products_links(x)
         for url in urls:
             results.append(parse_products(url))
-            print(parse_products(url))
+            # print(parse_products(url))
         save_csv(results)
 
 main()
+
+
