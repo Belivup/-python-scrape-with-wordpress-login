@@ -1,5 +1,6 @@
 import requests
 import csv
+import uuid
 from requests_html import HTMLSession
 from datetime import date
 s = HTMLSession()
@@ -37,38 +38,49 @@ def parse_products(url):
 
     image = r.html.find('.woocommerce-product-gallery__image a', first=True).attrs['href']
 
-    category = "WordPress Theme"
+    try:
+        fcat = r.html.find('.posted_in', first=True)
+        scat = fcat.text.splitlines()
+        cat = ' '.join(scat).replace(", ", " | ").replace("Categories: ", "")
+    except AttributeError as err:
+        cat = "No Category"
 
-    sdes = "Very cheap price & Original product !, We Purchase And Download From Original Authors, You’ll Receive Untouched And Unmodified Files, 100% Clean Files & Free From Virus, Unlimited Domain Usage, Free New Version"
+    sdes = "Very cheap price & Original product | We Purchase And Download From Original Authors | You’ll Receive Untouched And Unmodified Files | 100% Clean Files & Free From Virus | Unlimited Domain Usage | Free New Version"
 
     try:
         full_des = r.html.find('#tab-description', first=True)
         ff_des = full_des.text.splitlines()
-        f_des = ''.join(ff_des)
+        f_des = ' '.join(ff_des).replace(".", "<br><br>")
 
     except AttributeError as err:
         f_des = "No Description Given"
 
     try:
         versions = r.html.find('.product-short-description ul li:nth-child(7) ', first=True)
-        version = versions.text
+        version = versions.text.replace("Product Version : ", "")
     except AttributeError as err:
         version = "Update Version"
+
+    id = str(uuid.uuid4().fields[-1])[:6]
 
     today = date.today()
     update = today.strftime("%d/%m/%Y")
 
     product_details = {
+        'id': id,
+        'Author': "wpview",
         'image': image,
+        'status': 'publish',
         'title': title,
         'price': price,
         'version': version,
         'demo_link': demo_link,
         'download_link': download_link,
         'update': update,
-        'category': category,
+        'category': cat,
         'sdes': sdes,
         'f_des': f_des,
+
     }
     return product_details
 
@@ -89,7 +101,7 @@ def main():
         urls = get_products_links(x)
         for url in urls:
             results.append(parse_products(url))
+            print(parse_products(url))
         save_csv(results)
-
 
 main()
