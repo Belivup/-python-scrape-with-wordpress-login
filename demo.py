@@ -18,15 +18,16 @@ s = HTMLSession()
 #         links.append(item.find('a', first=True).attrs['href'])
 #     return links
 
-url = 'https://plugintheme.net/shop/hide-my-wp/'
+url = 'https://plugintheme.net/shop/betheme-responsive-multi-purpose-wordpress-theme/'
 
 def parse_products(url):
 
     r = s.get(url)
 
+
     fcat = r.html.find('.posted_in', first=True)
     scat = fcat.text.splitlines()
-    cat = ' '.join(scat).replace(", ", " | ").replace("Categories: ", "")
+    cat = ' '.join(scat).replace("Categories: ", "WordPress Theme > ")
 
     product_details = {
         'f_des': cat,

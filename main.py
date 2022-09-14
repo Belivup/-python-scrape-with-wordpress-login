@@ -41,11 +41,9 @@ def parse_products(url):
     try:
         fcat = r.html.find('.posted_in', first=True)
         scat = fcat.text.splitlines()
-        cat = ' '.join(scat).replace(", ", " | ").replace("Categories: ", "")
+        cat = ' '.join(scat).replace("Categories: ", "WordPress Theme > ")
     except AttributeError as err:
-        cat = "No Category"
-
-    sdes = "Very cheap price & Original product | We Purchase And Download From Original Authors | You’ll Receive Untouched And Unmodified Files | 100% Clean Files & Free From Virus | Unlimited Domain Usage | Free New Version"
+        cat = "WordPress Theme > WordPress Theme"
 
     try:
         full_des = r.html.find('#tab-description', first=True)
@@ -67,19 +65,26 @@ def parse_products(url):
     update = today.strftime("%d/%m/%Y")
 
     product_details = {
-        'id': id,
+        'Title': title,
+        'Item Unique Id': id,
+        'Modified Date': update,
         'Author': "wpview",
-        'image': image,
-        'status': 'publish',
-        'title': title,
-        'price': price,
-        'version': version,
-        'demo_link': demo_link,
-        'download_link': download_link,
-        'update': update,
-        'category': cat,
-        'sdes': sdes,
-        'f_des': f_des,
+        'Featured Image': image,
+        'Product Version': version,
+        'Download Categories': cat,
+        'Post type': 'download',
+        'Demo Link': demo_link,
+        'Status': 'publish',
+        'Edd Price': price,
+        'Files: File: 1': download_link,
+        'Mayosis Features Field: Name: 1': 'Very cheap price & Original product',
+        'Mayosis Features Field: Name: 2': 'We Purchase And Download From Original Authors',
+        'Mayosis Features Field: Name: 3': 'You’ll Receive Untouched And Unmodified Files',
+        'Mayosis Features Field: Name: 4': '100% Clean Files & Free From Virus',
+        'Mayosis Features Field: Name: 5': 'Unlimited Domain Usage',
+        'Mayosis Features Field: Name: 6': 'Free New Version',
+
+        'Content': f_des,
 
     }
     return product_details
@@ -101,7 +106,7 @@ def main():
         urls = get_products_links(x)
         for url in urls:
             results.append(parse_products(url))
-            # print(parse_products(url))
+            print(parse_products(url))
         save_csv(results)
 
 main()
