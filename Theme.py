@@ -41,9 +41,9 @@ def parse_products(url):
     try:
         fcat = r.html.find('.posted_in', first=True)
         scat = fcat.text.splitlines()
-        cat = ' '.join(scat).replace("Categories: ", "WordPress Theme > ")
+        cat = ' '.join(scat).replace("Categories: ", "Wordpress Themes > ")
     except AttributeError as err:
-        cat = "WordPress Theme > WordPress Theme"
+        cat = "Wordpress Themes > Wordpress Themes"
 
     try:
         full_des = r.html.find('#tab-description', first=True)
@@ -58,7 +58,6 @@ def parse_products(url):
         version = versions.text.replace("Product Version : ", "")
     except AttributeError as err:
         version = "Current Version"
-
 
     today = date.today()
     update = today.strftime("%d/%m/%Y")
@@ -76,8 +75,8 @@ def parse_products(url):
         'Edd Price': price,
         'Files: File: 1': download_link,
         'Mayosis Features Field: Name: 1': 'Very cheap price & Original product',
-        'Mayosis Features Field: Name: 2': 'We Purchase And Download From Original Authors',
-        'Mayosis Features Field: Name: 3': 'You’ll Receive Untouched And Unmodified Files',
+        'Mayosis Features Field: Name: 2': 'We Purchase & Download From Authors',
+        'Mayosis Features Field: Name: 3': 'You’ll Receive Untouched Files',
         'Mayosis Features Field: Name: 4': '100% Clean Files & Free From Virus',
         'Mayosis Features Field: Name: 5': 'Unlimited Domain Usage',
         'Mayosis Features Field: Name: 6': 'Free New Version',
@@ -92,16 +91,24 @@ def parse_products(url):
 def save_csv(results):
     keys = results[0].keys()
 
-    with open('Products.csv', 'w') as f:
+    with open('Themes.csv', 'w') as f:
         dict_writer = csv.DictWriter(f, keys)
         dict_writer.writeheader()
         dict_writer.writerows(results)
 
 
+
+def page_len():
+    r = s.get('https://plugintheme.net/product-category/wordpress-themes/')
+    products = r.html.find('.page-numbers', first=True).text.splitlines()
+    page_len = int(products[-1]) + 1
+    return page_len
+
+
 def main():
     results = []
 
-    for x in range(1, 2):
+    for x in range(1, page_len()):
         urls = get_products_links(x)
         for url in urls:
             results.append(parse_products(url))
@@ -109,5 +116,11 @@ def main():
         save_csv(results)
 
 main()
+
+
+#Page Len URL
+#Change url
+#Change Category
+#Name Fies
 
 
