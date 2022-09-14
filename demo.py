@@ -24,13 +24,8 @@ def parse_products(url):
 
     r = s.get(url)
 
-
-    fcat = r.html.find('.posted_in', first=True)
-    scat = fcat.text.splitlines()
-    cat = ' '.join(scat).replace("Categories: ", "WordPress Theme > ")
-
     product_details = {
-        'f_des': cat,
+        'f_des': r,
     }
     return product_details
 
