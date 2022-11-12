@@ -40,7 +40,7 @@ with requests.Session() as s:
     }
 
     data = {
-        'log': 'belivup@gmail.com',
+        'log': 'yourmail@gmail.com',
         'pwd': 'DemoPass12',
         'wp-submit': 'Log In',
         'redirect_to': 'https://plugintheme.net/wp-admin/',
